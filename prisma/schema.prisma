@@ -1,0 +1,80 @@
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+model User {
+  id           Int     @id @default(autoincrement())
+  identifiant  String  @unique
+  nom          String
+  prenom       String
+  mail         String  @unique
+  codeSecret   String
+  telephone    String  @unique
+  solde        Float
+  photo        String?
+  plafond      Float?
+  type         String
+  type_societe String?
+
+  comptesBank          CompteBank[]
+  notifications        Notifications[]
+  sentTransactions     Transactions[]  @relation("SentTransactions")
+  receivedTransactions Transactions[]  @relation("ReceivedTransactions")
+  infosImages          ContenuMedia[]  @relation("InfosImages")
+}
+
+model Notifications {
+  id      Int       @id @default(autoincrement())
+  message String
+  read_at DateTime?
+  date    DateTime
+  userId  Int
+  user    User      @relation(fields: [userId], references: [id])
+
+  @@index([userId])
+}
+
+model Transactions {
+  id             Int      @id @default(autoincrement())
+  paiement       Float
+  status         String
+  date           DateTime
+  solde_sender   Float
+  solde_receiver Float
+  frais          Float
+  type           String
+  identifiant    String
+  senderId       Int?
+  senderString   String?
+  receiverId     Int?
+  receiverString String?
+
+  sender   User? @relation("SentTransactions", fields: [senderId], references: [id])
+  receiver User? @relation("ReceivedTransactions", fields: [receiverId], references: [id])
+
+  @@index([senderId])
+  @@index([receiverId])
+}
+
+model CompteBank {
+  id       Int    @id @default(autoincrement())
+  numero   String @unique
+  nom_bank String
+  solde    Float
+  userId   Int
+  user     User   @relation(fields: [userId], references: [id])
+
+  @@index([userId])
+}
+
+model ContenuMedia {
+  id     Int    @id @default(autoincrement())
+  url    String
+  userId Int?
+  User   User?  @relation("InfosImages", fields: [userId], references: [id])
+}
