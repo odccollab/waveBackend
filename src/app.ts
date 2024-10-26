@@ -5,8 +5,7 @@ import swaggerSetup from './swagger'
 
 dotenv.config();
 
-import userRoutes from './routes/UserRoute';
-import postRoutes from './routes/PostRoute';
+
 import cors from 'cors';
 const app: Express = express();
 swaggerSetup(app)
@@ -15,8 +14,6 @@ const PORT = process.env.PORT || 3000;
 app.use(cors());
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
-app.use("/users",userRoutes)
-app.use("/posts",postRoutes)
 app.listen(PORT, () => console.log(`Server running on port ${PORT}`));
 
 // app.post('/createUser', async (req: Request, res: Response) => {
