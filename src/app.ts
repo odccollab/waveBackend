@@ -1,64 +1,30 @@
+// app.ts
 import express, { Express } from 'express';
 import { PrismaClient } from '@prisma/client';
 import dotenv from 'dotenv';
-import swaggerSetup from './swagger'
+import swaggerSetup from './swagger';
+import cors from 'cors';
+import transactionRoute from './routes/TransactionRoute';
+import notificationRoute from './routes/UserRoute';
 
 dotenv.config();
 
-
-import cors from 'cors';
 const app: Express = express();
-swaggerSetup(app)
+swaggerSetup(app);
+
 const prisma = new PrismaClient();
 const PORT = process.env.PORT || 3000;
+
 app.use(cors());
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
+
+// Route principale pour les transferts
+app.use('/api/transfer', transactionRoute);
+
+// Route principale pour les notifications
+app.use('/api/user', notificationRoute);
+
 app.listen(PORT, () => console.log(`Server running on port ${PORT}`));
 
-// app.post('/createUser', async (req: Request, res: Response) => {
-//   const { nom, email, password, prenom, telephone,type } = req.body;
-
-
-// let credit=3
-// const data= {
-//     nom,
-//     email,
-//     password,
-//     prenom,
-//     telephone,
-//     type,
-//     credit,
-
-//   }
-//   try {
-//     const user = await User.create(data);
-//     res.status(201).json(user);
-//   } catch (err: any) {
-//     console.error(err.message);
-//     res.status(500).json({ message: 'Server Error' });
-//   }
-// });
-
-// app.post('/createPost', async (req: Request, res: Response) => {
-//     const {  content,title ,state} = req.body;
-//     try {
-//       const user = await Post.create({
-//         data: {
-//           content,
-//           title,
-//           state: state,
-//           user: { connect: { id: req.body.userId } },
-//         },
-//       });
-//       res.status(201).json(user);
-//     } catch (err: any) {
-//       console.error(err.message);
-//       res.status(500).json({ message: 'Server Error' });
-//     }
-//   });
-
-
-// app.listen(PORT, () => {
-//   console.log(`Server running on port ${PORT}`);
-// });
+export default app;

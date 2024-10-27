@@ -13,34 +13,10 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 const jsonwebtoken_1 = __importDefault(require("jsonwebtoken"));
-const User_1 = __importDefault(require("../models/User"));
+// import UserModel from '../models/User';
 const SchemaValidation_1 = __importDefault(require("../utils/SchemaValidation"));
-const prisma_1 = __importDefault(require("../prisma"));
 const CloudUploadService_1 = __importDefault(require("../services/CloudUploadService"));
 class Middleware {
-    constructor() {
-        this.canValidateOrder = (req, res, next) => __awaiter(this, void 0, void 0, function* () {
-            var _a;
-            const userId = +((_a = req.user) === null || _a === void 0 ? void 0 : _a.id);
-            const orderId = parseInt(req.params.orderId, 10);
-            console.log(req.params);
-            if (!userId || !orderId) {
-                return res.status(401).json({ message: "Utilisateur non authentifié ou commande non spécifiée" });
-            }
-            // Vérifiez si la commande appartient au vendeur spécifié
-            const order = yield prisma_1.default.commande.findUnique({
-                where: { id: orderId },
-                include: { user: true }, // Inclure l'utilisateur (vendeur) pour vérification
-            });
-            console.log(order.idVendeur !== +userId);
-            console.log(order.user.id !== +userId);
-            console.log(!order);
-            if (!order || (order.user.id !== +userId && order.idVendeur !== +userId)) {
-                return res.status(403).json({ message: "Vous n'êtes pas autorisé à valider cette commande" });
-            }
-            next();
-        });
-    }
     verifyToken(req, res, next) {
         var _a;
         try {
@@ -64,24 +40,22 @@ class Middleware {
             res.status(401).json({ error: 'Access denied, token is invalid' });
         }
     }
-    canPost(req, res, next) {
-        return __awaiter(this, void 0, void 0, function* () {
-            var _a;
-            try {
-                const userId = (_a = req.user) === null || _a === void 0 ? void 0 : _a.id;
-                const user = yield User_1.default.findUnique({ id: userId });
-                if (!user)
-                    return res.status(404).json({ error: 'User not found' });
-                if (user.credit < 1) {
-                    return res.status(403).json({ error: 'Cannot continue this operation, insufficient credit' });
-                }
-                next();
-            }
-            catch (error) {
-                res.status(401).json({ error: 'Access denied, token is invalid' });
-            }
-        });
-    }
+    // public async canPost(req: Request, res: Response, next: NextFunction) {
+    //     try {
+    //         const userId = req.user?.id;
+    //         const user = await UserModel.findUnique({id:userId});
+    //
+    //         if (!user) return res.status(404).json({ error: 'User not found' });
+    //
+    //         if (user.credit < 1) {
+    //             return res.status(403).json({ error: 'Cannot continue this operation, insufficient credit' });
+    //         }
+    //
+    //         next();
+    //     } catch (error) {
+    //         res.status(401).json({ error: 'Access denied, token is invalid' });
+    //     }
+    // }
     validateData(key) {
         return (req, res, next) => {
             const schema = SchemaValidation_1.default[key];
@@ -95,6 +69,28 @@ class Middleware {
             next();
         };
     }
+    // canValidateOrder = async (req: Request, res: Response, next: NextFunction) => {
+    //     const userId = +req.user?.id!;
+    //     const orderId = parseInt(req.params.orderId, 10);
+    //     console.log(req.params)
+    //     if (!userId || !orderId) {
+    //         return res.status(401).json({ message: "Utilisateur non authentifié ou commande non spécifiée" });
+    //     }
+    //
+    //     // Vérifiez si la commande appartient au vendeur spécifié
+    //     const order = await prisma.commande.findUnique({
+    //         where: { id: orderId },
+    //         include: { user: true }, // Inclure l'utilisateur (vendeur) pour vérification
+    //     });
+    //     console.log(order!.idVendeur !== +userId)
+    //     console.log(order!.user.id !== +userId)
+    //     console.log(!order)
+    //     if (!order ||(order.user.id !== +userId&&order.idVendeur !== +userId)  ) {
+    //         return res.status(403).json({ message: "Vous n'êtes pas autorisé à valider cette commande" });
+    //     }
+    //
+    //     next();
+    // };
     dynamicUploadMiddleware(req, res, next) {
         return __awaiter(this, void 0, void 0, function* () {
             try {

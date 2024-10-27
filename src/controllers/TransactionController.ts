@@ -32,6 +32,7 @@ class TransactionController {
 
         let frais = 0;
         let soldeSenderAfterTransaction = sender.solde - montant;
+// console.log(soldeSenderAfterTransaction);
 
         // Logique de transaction selon le type
         switch (type) {
@@ -45,6 +46,7 @@ class TransactionController {
                 break;
 
             case 'transfert':
+                
                 // Vérifier que le receiver est un utilisateur avec un solde pour les transferts
                 if (receiver && 'solde' in receiver) {
                     receiver.solde += montant;
@@ -116,3 +118,5 @@ class TransactionController {
         return transaction;
     }
 }
+
+export default new TransactionController();
