@@ -5,7 +5,6 @@ import swaggerSetup from './swagger'
 
 dotenv.config();
 
-
 import cors from 'cors';
 const app: Express = express();
 swaggerSetup(app)
