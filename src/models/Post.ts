@@ -1,11 +1,11 @@
-import Model from '../core/Model';
+// import Model from '../core/Model';
 
-class Post extends Model {
-    constructor() {
-        super();
-    }
+// class Post extends Model {
+//     constructor() {
+//         super();
+//     }
 
-}
-const PostModel=new Post();
+// }
+// const PostModel=new Post();
 
-export default PostModel;
+// export default PostModel;

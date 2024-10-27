@@ -1,7 +1,7 @@
 import { PrismaClient, User, Contact, Transactions } from '@prisma/client';
 import prisma from "../prisma";
 
-class TransactionController {
+export default class TransactionController {
     async transaction(
         sender: User,
         montant: number,
@@ -36,6 +36,12 @@ class TransactionController {
         // Logique de transaction selon le type
         switch (type) {
             case 'paiement':
+                if (receiver && 'solde' in receiver) {
+                    // Incrémentez le solde du receiver
+                    receiver.solde += montant;
+                } else {
+                    return 'Receiver must be a professional user for withdrawal transactions';
+                }
                 frais = 0;
                 break;
 
@@ -77,7 +83,17 @@ class TransactionController {
                 }
                 frais = 0;
                 break;
-
+            
+            case 'from_bank':
+                frais = 0;
+                break;
+    
+            case 'from_wave':
+                frais = montant * 0.05; // Frais de 5%
+                montant += frais;       // Le montant total inclut les frais
+                soldeSenderAfterTransaction -= frais; // Déduire les frais du solde final du sender
+                break;
+                       
             default:
                 return 'Transaction type not supported';
         }
@@ -89,7 +105,7 @@ class TransactionController {
         const transaction = await prisma.transactions.create({
             data: {
                 montant,
-                status: 'completed',
+                status: 'COMPLETED',
                 date: new Date(),
                 solde_sender: soldeSenderAfterTransaction,
                 solde_receiver: receiver && 'solde' in receiver ? receiver.solde : undefined,
