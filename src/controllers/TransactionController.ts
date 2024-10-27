@@ -1,7 +1,7 @@
 import { PrismaClient, User, Contact, Transactions } from '@prisma/client';
 import prisma from "../prisma";
 
-class TransactionController {
+export class TransactionController {
     async transaction(
         sender: User,
         montant: number,
@@ -115,4 +115,5 @@ class TransactionController {
 
         return transaction;
     }
+    
 }

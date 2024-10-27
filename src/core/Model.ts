@@ -9,7 +9,7 @@ export default class Model {
         const modelName = this.constructor.name.toLowerCase();
 
         const modelMap: { [key: string]: any } = {
-            post: prisma.post,
+            // post: prisma.post,
             user: prisma.user,
         };
 
