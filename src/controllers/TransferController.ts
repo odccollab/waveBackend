@@ -5,96 +5,82 @@ import { PrismaClient, User } from '@prisma/client';
 const prisma = new PrismaClient();
 
 class TransferController {
-    async transfer(req: Request, res: Response) {
-        const { receiverId, montant } = req.body;
+  async transfer(req: Request, res: Response) {
+    const { receiverId, montant } = req.body;
+    
+    try {
+      // Validation des entrées
+      if (!receiverId || !montant || isNaN(receiverId) || isNaN(montant)) {
+        return res.status(400).json({ 
+          error: 'Invalid input: receiverId and montant are required and must be numbers' 
+        });
+      }
 
-        try {
-            // Validation des entrées
-            if (!receiverId || !montant || isNaN(receiverId) || isNaN(montant)) {
-                return res.status(400).json({ 
-                    error: 'Invalid input: receiverId and montant are required and must be numbers' 
-                });
-            }
+      const montantNumber = Number(montant);
+      const senderId = 1;
+      
+      // Calcul des frais (1%)
+      const frais = montantNumber * 0.01;
+      const montantFinal = montantNumber - frais;
 
-            // Convertir montant en nombre
-            const montantNumber = Number(montant);
-            
-            // Fixer senderId à 1 comme demandé
-            const senderId = 1;
+      // Récupérer les utilisateurs AVANT la transaction
+      const [sender, receiver] = await Promise.all([
+        prisma.user.findUnique({ where: { id: senderId } }),
+        prisma.user.findUnique({ where: { id: receiverId } })
+      ]);
 
-            // Récupérer les utilisateurs avec une transaction Prisma pour garantir la cohérence
-            const [sender, receiver] = await Promise.all([
-                prisma.user.findUnique({ 
-                    where: { id: senderId }
-                }),
-                prisma.user.findUnique({ 
-                    where: { id: receiverId }
-                })
-            ]);
+      // Vérifications
+      if (!sender) {
+        return res.status(404).json({ error: 'Sender not found' });
+      }
+      if (!receiver) {
+        return res.status(404).json({ error: 'Receiver not found' });
+      }
+      if (!receiver.telephone) {
+        return res.status(400).json({ error: 'Receiver must have a valid phone number' });
+      }
 
-            // Vérifier l'existence des utilisateurs
-            if (!sender) {
-                return res.status(404).json({ error: 'Sender not found' });
-            }
+      // 1. Créer la transaction (qui gère la décrémentation du solde du sender)
+      const transactionResult = await TransactionController.transaction(
+        sender,
+        montantNumber,
+        'transfert',
+        receiver.telephone
+      );
 
-            if (!receiver) {
-                return res.status(404).json({ error: 'Receiver not found' });
-            }
-
-            // Vérifier que le receiver a un numéro de téléphone
-            if (!receiver.telephone) {
-                return res.status(400).json({ 
-                    error: 'Receiver must have a valid phone number' 
-                });
-            }
-
-            // Type est toujours "transfert"
-            const type = 'transfert';
-
-            // Commencer une transaction Prisma pour garantir l'atomicité
-            const transactionResult = await prisma.$transaction(async (prismaClient) => {
-                // Mettre à jour le solde du sender
-                const updatedSender = await prismaClient.user.update({
-                    where: { id: senderId },
-                    data: { 
-                        solde: {
-                            decrement: montantNumber
-                        }
-                    }
-                });
-
-                // Appeler la méthode transaction avec le sender mis à jour
-                const result = await TransactionController.transaction(
-                    updatedSender,
-                    montantNumber,
-                    type,
-                    receiver.telephone
-                );
-
-                return result;
-            });
-
-            // Gérer le résultat
-            if (typeof transactionResult === 'string') {
-                return res.status(400).json({ error: transactionResult });
-            }
-
-            // Retourner la transaction créée
-            return res.status(201).json(transactionResult);
-
-        } catch (error) {
-            console.error('Error in transfer:', error);
-            
-            // Gérer les erreurs Prisma spécifiquement
-            if (error instanceof Error && error.name === 'PrismaClientValidationError') {
-                return res.status(400).json({ 
-                    error: 'Validation error: Please check your input data' 
-                });
-            }
-
-            return res.status(500).json({ error: 'Internal server error' });
+      // 2. Mettre à jour uniquement le solde du receiver avec le montant moins les frais
+      const updatedReceiver = await prisma.user.update({
+        where: { id: receiverId },
+        data: { 
+          solde: { increment: montantFinal }
         }
+      });
+
+      return res.status(201).json({
+        transaction: transactionResult,
+        receiver: updatedReceiver,
+        details: {
+          montantEnvoye: montantNumber,
+          frais: frais,
+          montantRecu: montantFinal
+        }
+      });
+
+    } catch (error) {
+      console.error('Error in transfer:', error);
+      
+      if (error instanceof Error) {
+        if (error.name === 'PrismaClientValidationError') {
+          return res.status(400).json({ 
+            error: 'Validation error: Please check your input data' 
+          });
+        }
+        return res.status(400).json({ error: error.message });
+      }
+      
+      return res.status(500).json({ error: 'Internal server error' });
     }
+  }
 }
 
 export default new TransferController();

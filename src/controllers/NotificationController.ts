@@ -8,7 +8,7 @@ class NotificationController {
         try {
             // Pour l'instant, on utilise un userId fixe à 1
             // Dans un cas réel, vous récupéreriez l'userId depuis le token d'authentification
-            const userId = 2;
+            const userId = 1;
 
             const notifications = await prisma.notifications.findMany({
                 where: {
@@ -26,8 +26,9 @@ class NotificationController {
                     userId: true
                 }
             });
-
-            return res.status(200).json(notifications);
+                   // Par défaut, on prend les 2 premières notifications
+            const notificationsToDisplay = notifications.slice(0, 2);
+            return res.status(200).json(notificationsToDisplay);
 
         } catch (error) {
             console.error('Error fetching notifications:', error);

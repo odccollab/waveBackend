@@ -36,7 +36,6 @@ class TransactionController {
             }
             let frais = 0;
             let soldeSenderAfterTransaction = sender.solde - montant;
-            // console.log(soldeSenderAfterTransaction);
             // Logique de transaction selon le type
             switch (type) {
                 case 'paiement':
@@ -47,14 +46,9 @@ class TransactionController {
                     // Le receiver peut être un contact ou un utilisateur. On ne modifie pas son solde
                     break;
                 case 'transfert':
-                    // Vérifier que le receiver est un utilisateur avec un solde pour les transferts
-                    if (receiver && 'solde' in receiver) {
-                        receiver.solde += montant;
-                    }
-                    else {
-                        return 'Receiver must be a user for transfer transactions';
-                    }
-                    frais = 0;
+                    // les frais sont 1% du montant
+                    frais = 0.01 * montant;
+                    soldeSenderAfterTransaction = soldeSenderAfterTransaction - frais;
                     break;
                 case 'retrait':
                     // Le receiver doit être un utilisateur de type "pro" pour les retraits
