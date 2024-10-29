@@ -87,12 +87,15 @@ class TransactionController {
                     frais = 0;
                     break;
                 case 'from_bank':
+                    soldeSenderAfterTransaction = sender.solde + montant;
                     frais = 0;
+                    receiver = null;
                     break;
                 case 'from_wave':
                     frais = montant * 0.05; // Frais de 5%
                     montant += frais; // Le montant total inclut les frais
                     soldeSenderAfterTransaction -= frais; // Déduire les frais du solde final du sender
+                    receiver = null;
                     break;
                 default:
                     return 'Transaction type not supported';

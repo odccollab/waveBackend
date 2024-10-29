@@ -9,4 +9,6 @@ const router = express_1.default.Router();
 ;
 router.post('/charg-from-bank', RechargeController_1.default.chargFromBank.bind(RechargeController_1.default));
 router.post('/charg-from-wave', RechargeController_1.default.chargFromWave.bind(RechargeController_1.default));
+router.get('/notifications', RechargeController_1.default.getTransactions.bind(RechargeController_1.default));
+//  router.get('/notifications',NotificationService.getNotifications);
 exports.default = router;

@@ -28,5 +28,19 @@ class NotificationService {
             return notification;
         });
     }
+    // Récupère toutes les notifications pour un utilisateur spécifique
+    getNotifications() {
+        return __awaiter(this, void 0, void 0, function* () {
+            try {
+                const userId = 1;
+                const notifications = yield prisma_1.default.notifications.findMany();
+                return notifications;
+            }
+            catch (error) {
+                console.error('Error fetching notifications:', error);
+                throw new Error('Could not fetch notifications'); // Ou renvoyez un message d'erreur approprié
+            }
+        });
+    }
 }
 exports.default = new NotificationService();
