@@ -2,10 +2,11 @@ import express, { Express } from 'express';
 import { PrismaClient } from '@prisma/client';
 import dotenv from 'dotenv';
 import swaggerSetup from './swagger'
-
+import UserRoute2  from "./routes/UserRoute2";
 dotenv.config();
 
 import cors from 'cors';
+import TransfertDRoute from "./routes/TransfertDRoute";
 const app: Express = express();
 swaggerSetup(app)
 const prisma = new PrismaClient();
@@ -13,6 +14,8 @@ const PORT = process.env.PORT || 3000;
 app.use(cors());
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
+app.use("/user",UserRoute2)
+app.use("/trans",TransfertDRoute)
 app.listen(PORT, () => console.log(`Server running on port ${PORT}`));
 
 // app.post('/createUser', async (req: Request, res: Response) => {
