@@ -10,6 +10,8 @@ const swagger_1 = __importDefault(require("./swagger"));
 const UserRoute2_1 = __importDefault(require("./routes/UserRoute2"));
 const ContactRoute_1 = __importDefault(require("./routes/ContactRoute"));
 const CreditRoute_1 = __importDefault(require("./routes/CreditRoute"));
+const NotificationRoute_1 = __importDefault(require("./routes/NotificationRoute"));
+const TransactionRoute_1 = __importDefault(require("./routes/TransactionRoute"));
 dotenv_1.default.config();
 const cors_1 = __importDefault(require("cors"));
 const TransfertDRoute_1 = __importDefault(require("./routes/TransfertDRoute"));
@@ -22,7 +24,10 @@ app.use(express_1.default.json());
 app.use(express_1.default.urlencoded({ extended: true }));
 app.use("/user", UserRoute2_1.default);
 app.use("/trans", TransfertDRoute_1.default);
-
+// Route principale pour les transferts
+app.use('/api/transfer', TransactionRoute_1.default);
+// Route principale pour les notifications
+app.use('/api/user', NotificationRoute_1.default);
 app.listen(PORT, () => console.log(`Server running on port ${PORT}`));
 // Dans app.ts
 app.use((req, res, next) => {

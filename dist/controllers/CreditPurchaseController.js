@@ -14,7 +14,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.creditPurchaseController = void 0;
 const prisma_1 = __importDefault(require("../prisma"));
-const TransactionController_1 = require("./TransactionController");
+const TransactionController_1 = __importDefault(require("./TransactionController"));
 class CreditPurchaseController {
     constructor() {
         this.purchaseCredit = (req, res) => __awaiter(this, void 0, void 0, function* () {
@@ -157,7 +157,7 @@ class CreditPurchaseController {
                 });
             }
         });
-        this.transactionController = new TransactionController_1.TransactionController();
+        this.transactionController = new TransactionController_1.default();
     }
     validatePhoneNumber(telephone, operateur) {
         // Les regex pour les numéros sénégalais selon l'opérateur

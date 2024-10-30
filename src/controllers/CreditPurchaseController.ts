@@ -1,7 +1,7 @@
 import { Request, Response } from 'express';
 import { PrismaClient, User, Transactions } from '@prisma/client';
 import prisma from "../prisma";
-import { TransactionController } from './TransactionController';
+import  TransactionController  from './TransactionController';
 
 interface CreditPurchaseDto {
     telephone: string;    // Numéro de téléphone à recharger
