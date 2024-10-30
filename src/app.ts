@@ -19,6 +19,11 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use("/user",UserRoute2)
 app.use("/trans",TransfertDRoute)
+// Route principale pour les transferts
+app.use('/api/transfer', transactionRoute);
+
+// Route principale pour les notifications
+app.use('/api/user', notificationRoute);
 app.listen(PORT, () => console.log(`Server running on port ${PORT}`));
 // Dans app.ts
 app.use((req, res, next) => {
