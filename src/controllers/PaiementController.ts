@@ -45,7 +45,7 @@ class PaiementController {
             // Effectuer le paiement dans une transaction
             const transaction = await prisma.$transaction(async (txPrisma) => {
                 
-                return await this.transactionController.transaction(user, montant, 'paiement', societe.telephone);
+                return await TransactionController.transaction(user, montant, 'paiement', societe.telephone);
             });
             
             // Envoyer la notification après un paiement réussi

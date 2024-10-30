@@ -50,7 +50,7 @@ class RechargeController {
                         where: { userId_bankId: { userId, bankId: userBankId } },
                         data: { solde: { decrement: amount } },
                     });
-                    const result = yield this.transactionController.transaction(user, amount, 'from_bank', user.telephone);
+                    const result = yield TransactionController_1.default.transaction(user, amount, 'from_bank', user.telephone);
                     if (typeof result === 'string') {
                         throw new Error(result);
                     }
@@ -96,7 +96,7 @@ class RechargeController {
                     data: { solde: { increment: amount } },
                 });
                 // Appel de la méthode transaction du TransactionController
-                const transactionResult = yield this.transactionController.transaction(user, amount, 'from_wave', user.telephone // Assurez-vous que c'est le numéro correct pour le receiver
+                const transactionResult = yield TransactionController_1.default.transaction(user, amount, 'from_wave', user.telephone // Assurez-vous que c'est le numéro correct pour le receiver
                 );
                 if (typeof transactionResult === 'string') {
                     return res.status(400).json({ error: transactionResult });
