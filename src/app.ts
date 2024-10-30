@@ -5,7 +5,7 @@ import swaggerSetup from './swagger'
 import UserRoute2  from "./routes/UserRoute2";
 import contactRoutes from './routes/ContactRoute';
 import creditRoutes from './routes/CreditRoute';
-
+import notificationRoute from './routes/NotificationRoute';
 dotenv.config();
 
 import cors from 'cors';
