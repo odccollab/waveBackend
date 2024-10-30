@@ -11,14 +11,23 @@ import RechargeRouter from './routes/RechargeRoute';
 import PaiementRouter from './routes/PaiementRoute';
 import CompteRouter from './routes/CompteRoute';
 import BankRoute from './routes/BankRoute';
+import { Server as HttpServer } from 'http';
+import { Server as SocketIOServer } from 'socket.io';
 dotenv.config();
 
 import cors from 'cors';
 import TransfertDRoute from "./routes/TransfertDRoute";
 const app: Express = express();
+const httpServer: HttpServer = new HttpServer(app);
 swaggerSetup(app)
+const io = new SocketIOServer(httpServer, {
+    cors: {
+        origin: "*", // Permettre toutes les origines pour Socket.IO
+        methods: ["GET", "POST"]
+    }
+});
 const prisma = new PrismaClient();
-const PORT = process.env.PORT || 3001;
+const PORT = process.env.PORT || 3000;
 app.use(cors());
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
@@ -100,3 +109,4 @@ app.use('/banks', BankRoute);
 // app.listen(PORT, () => {
 //   console.log(`Server running on port ${PORT}`);
 // });
+export { io };

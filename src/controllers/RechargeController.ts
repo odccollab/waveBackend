@@ -47,7 +47,7 @@ class RechargeController {
           data: { solde: { decrement: amount } },
         });
 
-        const result = await this.transactionController.transaction(
+        const result = await TransactionController.transaction(
           user,
           amount,
           'from_bank',
@@ -105,7 +105,7 @@ class RechargeController {
       });
 
       // Appel de la méthode transaction du TransactionController
-      const transactionResult = await this.transactionController.transaction(
+      const transactionResult = await TransactionController.transaction(
         user,
         amount,
         'from_wave',

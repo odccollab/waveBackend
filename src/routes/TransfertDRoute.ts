@@ -6,6 +6,6 @@ import TransfertDiopController from "../controllers/TransfertDiopController";
 
 const router = Router();
 
-router.post('/retrait-code',Middleware.verifyToken, TransfertDiopController.retrait1);
+router.post('/retrait-code',Middleware.verifyToken, Middleware.verifySessionToken,TransfertDiopController.retrait1);
 router.post('/retrait',Middleware.verifyToken,Middleware.verifySessionToken, TransfertDiopController.retrait2);
 export default router;

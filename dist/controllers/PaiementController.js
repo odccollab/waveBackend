@@ -49,7 +49,7 @@ class PaiementController {
                 }
                 // Effectuer le paiement dans une transaction
                 const transaction = yield prisma.$transaction((txPrisma) => __awaiter(this, void 0, void 0, function* () {
-                    return yield this.transactionController.transaction(user, montant, 'paiement', societe.telephone);
+                    return yield TransactionController_1.default.transaction(user, montant, 'paiement', societe.telephone);
                 }));
                 // Envoyer la notification après un paiement réussi
                 yield NotificationService_1.default.sendNotification(userId, `Vous avez payé ${montant} à la société ${societeId}.`);

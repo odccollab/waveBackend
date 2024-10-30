@@ -1,17 +1,23 @@
 /*
   Warnings:
 
-  - You are about to drop the `UserBank` table. If the table is not empty, all the data it contains will be lost.
+  - You are about to drop the `comptebank` table. If the table is not empty, all the data it contains will be lost.
 
 */
 -- DropForeignKey
-ALTER TABLE "UserBank" DROP CONSTRAINT "UserBank_bankId_fkey";
-
--- DropForeignKey
-ALTER TABLE "UserBank" DROP CONSTRAINT "UserBank_userId_fkey";
+ALTER TABLE "comptebank" DROP CONSTRAINT "comptebank_userId_fkey";
 
 -- DropTable
-DROP TABLE "UserBank";
+DROP TABLE "comptebank";
+
+-- CreateTable
+CREATE TABLE "bank" (
+    "id" SERIAL NOT NULL,
+    "nom_bank" TEXT NOT NULL,
+    "photo" TEXT NOT NULL,
+
+    CONSTRAINT "bank_pkey" PRIMARY KEY ("id")
+);
 
 -- CreateTable
 CREATE TABLE "user_bank" (
@@ -21,6 +27,9 @@ CREATE TABLE "user_bank" (
 
     CONSTRAINT "user_bank_pkey" PRIMARY KEY ("userId","bankId")
 );
+
+-- CreateIndex
+CREATE UNIQUE INDEX "bank_nom_bank_key" ON "bank"("nom_bank");
 
 -- AddForeignKey
 ALTER TABLE "user_bank" ADD CONSTRAINT "user_bank_userId_fkey" FOREIGN KEY ("userId") REFERENCES "user"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
