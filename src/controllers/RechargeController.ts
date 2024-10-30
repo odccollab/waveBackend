@@ -12,7 +12,8 @@ class RechargeController {
   async chargFromBank(req: Request, res: Response) {
     try {
       const { userBankId, amount } = req.body; // Changer bankAccountId en userBankId
-      const userId = 1; // Remplacez par `req.userId` dans un contexte authentifié
+      const userId = parseInt(req.user!.id as string, 10); // Conversion explicite en number
+
 
       if (!userBankId || !amount || amount <= 0) {
         return res.status(400).json({
@@ -47,7 +48,7 @@ class RechargeController {
           data: { solde: { decrement: amount } },
         });
 
-        const result = await this.transactionController.transaction(
+        const result = await TransactionController.transaction(
           user,
           amount,
           'from_bank',
@@ -77,7 +78,8 @@ class RechargeController {
   async chargFromWave(req: Request, res: Response) {
     try {
       const { userBankId, amount } = req.body; // Changer bankAccountId en userBankId
-      const userId = 1; // Remplacez par `req.userId` dans un contexte authentifié
+      const userId = parseInt(req.user!.id as string, 10); 
+                                                        // Remplacez par `req.userId` dans un contexte authentifié
 
       if (!userBankId || !amount || amount <= 0) {
         return res.status(400).json({
@@ -105,7 +107,7 @@ class RechargeController {
       });
 
       // Appel de la méthode transaction du TransactionController
-      const transactionResult = await this.transactionController.transaction(
+      const transactionResult = await TransactionController.transaction(
         user,
         amount,
         'from_wave',

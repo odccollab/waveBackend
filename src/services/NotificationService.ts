@@ -1,4 +1,4 @@
-import { io } from '../app';
+// import { io } from '../app';
 import prisma from '../prisma';
 
 class NotificationService {
@@ -11,7 +11,7 @@ class NotificationService {
       },
     });
 
-    io.emit(`notification-${userId}`, notification); // Envoie au client spécifique
+    // io.emit(`notification-${userId}`, notification); // Envoie au client spécifique
     return notification;
   }
 

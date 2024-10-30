@@ -18,7 +18,7 @@ import TransfertDRoute from "./routes/TransfertDRoute";
 const app: Express = express();
 swaggerSetup(app)
 const prisma = new PrismaClient();
-const PORT = process.env.PORT || 3001;
+const PORT = process.env.PORT || 3000;
 app.use(cors());
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
@@ -38,7 +38,7 @@ app.use((req, res, next) => {
 
 
 // Dans votre app.ts ou index.ts
-app.use('/test1', contactRoutes);
+app.use('/users', contactRoutes);
 app.use('/v1', creditRoutes);
 
 // Dans app.ts

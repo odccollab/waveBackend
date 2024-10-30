@@ -22,7 +22,7 @@ class RechargeController {
         return __awaiter(this, void 0, void 0, function* () {
             try {
                 const { userBankId, amount } = req.body; // Changer bankAccountId en userBankId
-                const userId = 1; // Remplacez par `req.userId` dans un contexte authentifié
+                const userId = parseInt(req.user.id, 10); // Conversion explicite en number
                 if (!userBankId || !amount || amount <= 0) {
                     return res.status(400).json({
                         error: 'ID du compte bancaire et montant requis, montant doit être positif',
@@ -50,7 +50,7 @@ class RechargeController {
                         where: { userId_bankId: { userId, bankId: userBankId } },
                         data: { solde: { decrement: amount } },
                     });
-                    const result = yield this.transactionController.transaction(user, amount, 'from_bank', user.telephone);
+                    const result = yield TransactionController_1.default.transaction(user, amount, 'from_bank', user.telephone);
                     if (typeof result === 'string') {
                         throw new Error(result);
                     }
@@ -74,7 +74,8 @@ class RechargeController {
         return __awaiter(this, void 0, void 0, function* () {
             try {
                 const { userBankId, amount } = req.body; // Changer bankAccountId en userBankId
-                const userId = 1; // Remplacez par `req.userId` dans un contexte authentifié
+                const userId = parseInt(req.user.id, 10);
+                // Remplacez par `req.userId` dans un contexte authentifié
                 if (!userBankId || !amount || amount <= 0) {
                     return res.status(400).json({
                         error: 'ID du compte bancaire et montant requis, montant doit être positif',
@@ -96,7 +97,7 @@ class RechargeController {
                     data: { solde: { increment: amount } },
                 });
                 // Appel de la méthode transaction du TransactionController
-                const transactionResult = yield this.transactionController.transaction(user, amount, 'from_wave', user.telephone // Assurez-vous que c'est le numéro correct pour le receiver
+                const transactionResult = yield TransactionController_1.default.transaction(user, amount, 'from_wave', user.telephone // Assurez-vous que c'est le numéro correct pour le receiver
                 );
                 if (typeof transactionResult === 'string') {
                     return res.status(400).json({ error: transactionResult });

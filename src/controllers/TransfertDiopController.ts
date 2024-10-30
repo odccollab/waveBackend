@@ -52,11 +52,11 @@ class TransactionController {
         let agent = req.user!; // The logged-in agent
 
         const { code } = req.body;
- const agent2 = await prisma.user.findUnique({
-    where:{
-        telephone:agent.telephone
-    }
-})
+        const agent2 = await prisma.user.findUnique({
+            where:{
+                telephone:agent.telephone
+            }
+        })
         try {
 
             const redisKey = `${agent.telephone}:${code}`;

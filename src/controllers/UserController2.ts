@@ -26,7 +26,7 @@ class UserController2 {
         const otp = generateOtp();
         await redisClient.set(`otp_${phoneNumber}`, otp, {EX: 300});
 await MailerService.sendEmail(user.mail, "Authentification", "voici votre code : "+otp)
-        await smsService.sendSms(user.telephone, "voici votre code : "+otp);
+        // await smsService.sendSms(user.telephone, "voici votre code : "+otp);
         // Log ou envoi du code OTP (SMS)
         console.log(`Code OTP pour ${phoneNumber} : ${otp}`);
 
@@ -51,7 +51,7 @@ await MailerService.sendEmail(user.mail, "Authentification", "voici votre code :
             }
         });
         let secret = process.env.SECRET_KEY
-        const token = jwt.sign({userId: user!.id, telephone: user!.telephone},secret! , {
+        const token = jwt.sign({id: user!.id, telephone: user!.telephone,nom:user!.nom,prenom:user!.prenom,image:user!.photo,type:user!.type},secret! , {
             expiresIn: '30d',
         });
 

@@ -12,7 +12,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-const app_1 = require("../app");
+// import { io } from '../app';
 const prisma_1 = __importDefault(require("../prisma"));
 class NotificationService {
     sendNotification(userId, content) {
@@ -24,7 +24,7 @@ class NotificationService {
                     date: new Date(),
                 },
             });
-            app_1.io.emit(`notification-${userId}`, notification); // Envoie au client spécifique
+            // io.emit(`notification-${userId}`, notification); // Envoie au client spécifique
             return notification;
         });
     }

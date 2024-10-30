@@ -14,7 +14,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 Object.defineProperty(exports, "__esModule", { value: true });
 const prisma_1 = __importDefault(require("../prisma"));
 class TransactionController {
-    transaction(sender, montant, type, receiverPhone) {
+    static transaction(sender, montant, type, receiverPhone) {
         return __awaiter(this, void 0, void 0, function* () {
             // Recherche du receiver par numéro de téléphone dans les utilisateurs
             let receiver = yield prisma_1.default.user.findUnique({
@@ -131,5 +131,4 @@ class TransactionController {
         });
     }
 }
-exports.default = TransactionController;
 exports.default = TransactionController;

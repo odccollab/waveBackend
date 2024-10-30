@@ -18,7 +18,8 @@ class Middleware {
             }
 
             const decoded = jwt.verify(token, process.env.SECRET_KEY as string) as jwt.JwtPayload;
-
+            console.log(decoded);
+            
             req.user = {
                 id: decoded.id,
                 nom: decoded.nom,

@@ -13,16 +13,32 @@ class PaiementController {
     }
 
     async payerService(req: Request, res: Response): Promise<void> {
-        try {
-            const { userId, societeId, montant } = req.body;
+        // Vérifiez que l'ID utilisateur est défini et convertissez-le en nombre
+        const userId = req.user && parseInt(req.user.id, 10);
+        console.log(userId);
+        
+        if (!userId || isNaN(userId)) {
+            res.status(400).json({ error: 'ID utilisateur non valide' });
+            return;
+        }
 
-            // Vérifications de base
-            if (!userId || !societeId || !montant || montant <= 0) {
+        console.log(`User ID: ${userId}`);
+        
+        try {
+            const { societeId, montant } = req.body;
+
+            // Convertissez `societeId` en nombre et vérifiez `montant`
+            const parsedSocieteId = parseInt(societeId, 10);
+
+            if (!parsedSocieteId || isNaN(parsedSocieteId) || !montant || montant <= 0) {
                 res.status(400).json({
-                    error: 'User ID, Societe ID, et montant sont requis, et le montant doit être positif',
+                    error: 'Societe ID et montant sont requis, et le montant doit être positif',
                 });
                 return;
             }
+
+            console.log(`Societe ID: ${parsedSocieteId}`);
+            console.log(`Montant: ${montant}`);
 
             // Récupérer l'utilisateur et vérifier le solde
             const user = await prisma.user.findUnique({ where: { id: userId } });
@@ -36,7 +52,7 @@ class PaiementController {
             }
 
             // Récupérer la société
-            const societe = await prisma.user.findUnique({ where: { id: societeId } });
+            const societe = await prisma.user.findUnique({ where: { id: parsedSocieteId } });
             if (!societe || societe.type !== 'societe') {
                 res.status(404).json({ error: "Société introuvable" });
                 return;
@@ -44,10 +60,9 @@ class PaiementController {
 
             // Effectuer le paiement dans une transaction
             const transaction = await prisma.$transaction(async (txPrisma) => {
-                
-                return await this.transactionController.transaction(user, montant, 'paiement', societe.telephone);
+                return await TransactionController.transaction(user, montant, 'paiement', societe.telephone);
             });
-            
+
             // Envoyer la notification après un paiement réussi
             await NotificationService.sendNotification(userId, `Vous avez payé ${montant} à la société ${societeId}.`);
             

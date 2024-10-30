@@ -17,7 +17,6 @@ const redisClient_1 = __importDefault(require("../redisClient"));
 const jsonwebtoken_1 = __importDefault(require("jsonwebtoken"));
 const prisma_1 = __importDefault(require("../prisma"));
 const MailerService_1 = __importDefault(require("../utils/MailerService"));
-const SmsService_1 = __importDefault(require("../utils/SmsService"));
 // Générer un OTP à 6 chiffres
 const generateOtp = () => Math.floor(100000 + Math.random() * 900000).toString();
 exports.generateOtp = generateOtp;
@@ -40,7 +39,7 @@ class UserController2 {
             const otp = (0, exports.generateOtp)();
             yield redisClient_1.default.set(`otp_${phoneNumber}`, otp, { EX: 300 });
             yield MailerService_1.default.sendEmail(user.mail, "Authentification", "voici votre code : " + otp);
-            yield SmsService_1.default.sendSms(user.telephone, "voici votre code : " + otp);
+            // await smsService.sendSms(user.telephone, "voici votre code : "+otp);
             // Log ou envoi du code OTP (SMS)
             console.log(`Code OTP pour ${phoneNumber} : ${otp}`);
             return res.status(200).json({ message: 'Code OTP envoyé.' });
@@ -62,7 +61,7 @@ class UserController2 {
                 }
             });
             let secret = process.env.SECRET_KEY;
-            const token = jsonwebtoken_1.default.sign({ userId: user.id, telephone: user.telephone }, secret, {
+            const token = jsonwebtoken_1.default.sign({ id: user.id, telephone: user.telephone, nom: user.nom, prenom: user.prenom, image: user.photo, type: user.type }, secret, {
                 expiresIn: '30d',
             });
             return res.status(200).json({ message: 'OTP vérifié.', token });

@@ -22,7 +22,7 @@ const TransfertDRoute_1 = __importDefault(require("./routes/TransfertDRoute"));
 const app = (0, express_1.default)();
 (0, swagger_1.default)(app);
 const prisma = new client_1.PrismaClient();
-const PORT = process.env.PORT || 3001;
+const PORT = process.env.PORT || 3000;
 app.use((0, cors_1.default)());
 app.use(express_1.default.json());
 app.use(express_1.default.urlencoded({ extended: true }));
@@ -39,7 +39,7 @@ app.use((req, res, next) => {
     next();
 });
 // Dans votre app.ts ou index.ts
-app.use('/test1', ContactRoute_1.default);
+app.use('/users', ContactRoute_1.default);
 app.use('/v1', CreditRoute_1.default);
 // Dans app.ts
 app.get('/test', (req, res) => {

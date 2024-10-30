@@ -26,6 +26,7 @@ class Middleware {
                 return res.status(401).json({ error: 'No token provided' });
             }
             const decoded = jsonwebtoken_1.default.verify(token, process.env.SECRET_KEY);
+            console.log(decoded);
             req.user = {
                 id: decoded.id,
                 nom: decoded.nom,
