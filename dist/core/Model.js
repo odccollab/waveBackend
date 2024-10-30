@@ -15,7 +15,7 @@ class Model {
     constructor() {
         const modelName = this.constructor.name.toLowerCase();
         const modelMap = {
-            post: prisma.post,
+            // post: prisma.post,
             user: prisma.user,
         };
         this.prismaModel = modelMap[modelName];

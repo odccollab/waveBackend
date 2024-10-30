@@ -17,8 +17,18 @@ declare module 'express-serve-static-core' {
             prenom: string;
             image: string;
             type: string;
+            telephone: string;
+
         };
         files?: { [fieldname: string]: Express.Multer.File[] };
+        sessionUser?:{
+            id: string;
+            nom: string;
+            prenom: string;
+            image: string;
+            type: string;
+            telephone: string;
+        }
     }
 }
 

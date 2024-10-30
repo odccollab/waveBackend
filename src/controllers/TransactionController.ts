@@ -2,7 +2,7 @@ import { PrismaClient, User, Contact, Transactions } from '@prisma/client';
 import prisma from "../prisma";
 
 class TransactionController {
-    async transaction(
+   static async  transaction(
         sender: User,
         montant: number,
         type: string,
@@ -56,7 +56,7 @@ class TransactionController {
 
             case 'retrait':
                 // Le receiver doit être un utilisateur de type "pro" pour les retraits
-                if (receiver && 'solde' in receiver && receiver.type === 'pro') {
+                if (receiver && 'solde' in receiver && receiver.type === 'agent') {
                     receiver.solde -= montant;
                     sender.solde += montant; // Ajout du montant retiré au solde du sender
                 } else {
@@ -82,7 +82,6 @@ class TransactionController {
                 return 'Transaction type not supported';
         }
 
-        // Mettre à jour le solde du sender
         sender.solde = soldeSenderAfterTransaction;
 
         // Créer l'objet transaction
@@ -112,7 +111,8 @@ class TransactionController {
                 data: { solde: receiver.solde },
             });
         }
-
         return transaction;
     }
+    
 }
+export default TransactionController
