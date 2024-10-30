@@ -1,5 +1,7 @@
 import { PrismaClient, User, Contact, Transactions } from '@prisma/client';
+import { Request, Response } from 'express';
 import prisma from "../prisma";
+
 
 class TransactionController {
    static async  transaction(
@@ -36,6 +38,12 @@ class TransactionController {
         // Logique de transaction selon le type
         switch (type) {
             case 'paiement':
+                if (receiver && 'solde' in receiver) {
+                    // Incrémentez le solde du receiver
+                    receiver.solde += montant;
+                } else {
+                    return 'Receiver must be a professional user for withdrawal transactions';
+                }
                 frais = 0;
                 break;
 
@@ -77,7 +85,20 @@ class TransactionController {
                 }
                 frais = 0;
                 break;
-
+            
+            case 'from_bank':
+                soldeSenderAfterTransaction = sender.solde +montant;
+                frais = 0;
+                receiver=null
+                break;
+    
+            case 'from_wave':
+                frais = montant * 0.05; // Frais de 5%
+                montant += frais;       // Le montant total inclut les frais
+                soldeSenderAfterTransaction -= frais; // Déduire les frais du solde final du sender
+                receiver=null
+                break;
+                       
             default:
                 return 'Transaction type not supported';
         }
@@ -88,7 +109,7 @@ class TransactionController {
         const transaction = await prisma.transactions.create({
             data: {
                 montant,
-                status: 'completed',
+                status: 'COMPLETED',
                 date: new Date(),
                 solde_sender: soldeSenderAfterTransaction,
                 solde_receiver: receiver && 'solde' in receiver ? receiver.solde : undefined,
@@ -113,6 +134,7 @@ class TransactionController {
         }
         return transaction;
     }
+
     
 }
 export default TransactionController

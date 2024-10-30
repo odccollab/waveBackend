@@ -8,6 +8,27 @@ datasource db {
 }
 
 model User {
+<<<<<<< HEAD
+  id           Int     @id @default(autoincrement())
+  identifiant  String  @unique
+  nom          String
+  prenom       String
+  mail         String  @unique
+  codeSecret   String
+  telephone    String  @unique
+  solde        Float
+  photo        String?
+  plafond      Float?
+  type         String
+  type_societe String?
+
+  notifications        Notifications[]
+  sentTransactions     Transactions[]  @relation("SentTransactions")
+  receivedTransactions Transactions[]  @relation("ReceivedTransactions")
+  infosImages          ContenuMedia[]  @relation("InfosImages")
+  Contact              Contact[]
+  userBanks            UserBank[]      @relation("UserBanks")
+=======
   id                   Int             @id @default(autoincrement())
   identifiant          String          @unique
   nom                  String
@@ -27,6 +48,7 @@ model User {
   sentTransactions     Transactions[]  @relation("SentTransactions")
   banques              Banque[]        @relation("UserBanque") // Many-to-many relation
   UserBanque           UserBanque[]
+>>>>>>> main
 
   @@map("user")
 }
@@ -75,7 +97,7 @@ model Transactions {
   frais          Float
   type           String
   senderId       Int
-  receiverId     Int?
+  receiverId     Int?${endpoint}`
   receiverString String?
   receiver       User?    @relation("ReceivedTransactions", fields: [receiverId], references: [id])
   sender         User     @relation("SentTransactions", fields: [senderId], references: [id])
@@ -85,6 +107,10 @@ model Transactions {
   @@map("transaction")
 }
 
+<<<<<<< HEAD
+
+=======
+>>>>>>> main
 model ContenuMedia {
   id     Int    @id @default(autoincrement())
   url    String
@@ -103,4 +129,27 @@ model Contact {
   User      User   @relation(fields: [userId], references: [id])
 
   @@map("contact")
+}
+
+model Bank {
+  id       Int    @id @default(autoincrement())
+  nom_bank String @unique
+  photo    String
+
+  userBanks UserBank[] @relation("UserBanks") // Relation avec UserBank
+
+  @@map("bank")
+}
+
+model UserBank {
+  userId Int
+  bankId Int
+  solde  Float
+  
+  user User @relation("UserBanks", fields: [userId], references: [id])
+  bank Bank @relation("UserBanks", fields: [bankId], references: [id])
+
+  @@id([userId, bankId]) // Clé primaire composite
+
+  @@map("user_bank")  
 }

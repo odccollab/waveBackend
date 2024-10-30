@@ -14,7 +14,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 Object.defineProperty(exports, "__esModule", { value: true });
 const prisma_1 = __importDefault(require("../prisma"));
 class TransactionController {
-    static transaction(sender, montant, type, receiverPhone) {
+    transaction(sender, montant, type, receiverPhone) {
         return __awaiter(this, void 0, void 0, function* () {
             // Recherche du receiver par numéro de téléphone dans les utilisateurs
             let receiver = yield prisma_1.default.user.findUnique({
@@ -39,6 +39,13 @@ class TransactionController {
             // Logique de transaction selon le type
             switch (type) {
                 case 'paiement':
+                    if (receiver && 'solde' in receiver) {
+                        // Incrémentez le solde du receiver
+                        receiver.solde += montant;
+                    }
+                    else {
+                        return 'Receiver must be a professional user for withdrawal transactions';
+                    }
                     frais = 0;
                     break;
                 case 'credit':
@@ -79,6 +86,17 @@ class TransactionController {
                     }
                     frais = 0;
                     break;
+                case 'from_bank':
+                    soldeSenderAfterTransaction = sender.solde + montant;
+                    frais = 0;
+                    receiver = null;
+                    break;
+                case 'from_wave':
+                    frais = montant * 0.05; // Frais de 5%
+                    montant += frais; // Le montant total inclut les frais
+                    soldeSenderAfterTransaction -= frais; // Déduire les frais du solde final du sender
+                    receiver = null;
+                    break;
                 default:
                     return 'Transaction type not supported';
             }
@@ -87,7 +105,7 @@ class TransactionController {
             const transaction = yield prisma_1.default.transactions.create({
                 data: {
                     montant,
-                    status: 'completed',
+                    status: 'COMPLETED',
                     date: new Date(),
                     solde_sender: soldeSenderAfterTransaction,
                     solde_receiver: receiver && 'solde' in receiver ? receiver.solde : undefined,
@@ -113,4 +131,5 @@ class TransactionController {
         });
     }
 }
+exports.default = TransactionController;
 exports.default = TransactionController;

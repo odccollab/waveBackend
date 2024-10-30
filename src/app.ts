@@ -7,6 +7,10 @@ import contactRoutes from './routes/ContactRoute';
 import creditRoutes from './routes/CreditRoute';
 import notificationRoute from './routes/NotificationRoute';
 import transactionRoute from './routes/TransactionRoute';
+import RechargeRouter from './routes/RechargeRoute';
+import PaiementRouter from './routes/PaiementRoute';
+import CompteRouter from './routes/CompteRoute';
+import BankRoute from './routes/BankRoute';
 dotenv.config();
 
 import cors from 'cors';
@@ -41,6 +45,12 @@ app.use('/v1', creditRoutes);
 app.get('/test', (req, res) => { 
     res.json({ message: 'Server is running' });
 });
+app.use('/recharge', RechargeRouter);
+app.use('/paiement', PaiementRouter);
+app.use('/compte', CompteRouter);
+app.use('/banks', BankRoute);
+
+
 // app.post('api/transfer/receive', transferController.receiveTransfer);
 
 

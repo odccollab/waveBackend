@@ -12,6 +12,10 @@ const ContactRoute_1 = __importDefault(require("./routes/ContactRoute"));
 const CreditRoute_1 = __importDefault(require("./routes/CreditRoute"));
 const NotificationRoute_1 = __importDefault(require("./routes/NotificationRoute"));
 const TransactionRoute_1 = __importDefault(require("./routes/TransactionRoute"));
+const RechargeRoute_1 = __importDefault(require("./routes/RechargeRoute"));
+const PaiementRoute_1 = __importDefault(require("./routes/PaiementRoute"));
+const CompteRoute_1 = __importDefault(require("./routes/CompteRoute"));
+const BankRoute_1 = __importDefault(require("./routes/BankRoute"));
 dotenv_1.default.config();
 const cors_1 = __importDefault(require("cors"));
 const TransfertDRoute_1 = __importDefault(require("./routes/TransfertDRoute"));
@@ -41,6 +45,10 @@ app.use('/v1', CreditRoute_1.default);
 app.get('/test', (req, res) => {
     res.json({ message: 'Server is running' });
 });
+app.use('/recharge', RechargeRoute_1.default);
+app.use('/paiement', PaiementRoute_1.default);
+app.use('/compte', CompteRoute_1.default);
+app.use('/banks', BankRoute_1.default);
 // app.post('api/transfer/receive', transferController.receiveTransfer);
 // app.post('/createUser', async (req: Request, res: Response) => {
 //   const { nom, email, password, prenom, telephone,type } = req.body;
