@@ -31,7 +31,8 @@ class Middleware {
                 nom: decoded.nom,
                 prenom: decoded.prenom,
                 image: decoded.image,
-                type: decoded.type
+                type: decoded.type,
+                telephone: decoded.telephone
             };
             console.log(req.user.id);
             next();
@@ -119,6 +120,19 @@ class Middleware {
                 res.status(500).json({ message: "Failed to upload files" });
             }
         });
+    }
+    verifySessionToken(req, res, next) {
+        try {
+            const sessionToken = req.header("x-session-token");
+            if (!sessionToken) {
+                return res.status(401).json({ error: 'Le token de session est requis.' });
+            }
+            const decodedSession = jsonwebtoken_1.default.verify(sessionToken, process.env.SECRET_KEY);
+            next();
+        }
+        catch (error) {
+            return res.status(401).json({ error: 'Token de session invalide.' });
+        }
     }
 }
 exports.default = new Middleware();

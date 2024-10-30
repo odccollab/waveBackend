@@ -12,6 +12,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
+
 exports.TransactionController = void 0;
 const prisma_1 = __importDefault(require("../prisma"));
 class TransactionController {
@@ -58,7 +59,8 @@ class TransactionController {
                     break;
                 case 'retrait':
                     // Le receiver doit être un utilisateur de type "pro" pour les retraits
-                    if (receiver && 'solde' in receiver && receiver.type === 'pro') {
+                    if (receiver && 'solde' in receiver && receiver.type === 'agent') {
+
                         receiver.solde -= montant;
                         sender.solde += montant; // Ajout du montant retiré au solde du sender
                     }
@@ -83,6 +85,7 @@ class TransactionController {
                 default:
                     return 'Transaction type not supported';
             }
+
             // Mettre à jour le solde du sender
             sender.solde = soldeSenderAfterTransaction;
             // Créer l'objet transaction
@@ -115,4 +118,5 @@ class TransactionController {
         });
     }
 }
-exports.TransactionController = TransactionController;
+exports.default = TransactionController;
+

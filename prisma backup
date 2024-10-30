@@ -26,31 +26,30 @@ model User {
   receivedTransactions Transactions[]  @relation("ReceivedTransactions")
   sentTransactions     Transactions[]  @relation("SentTransactions")
   banques              Banque[]        @relation("UserBanque") // Many-to-many relation
-  UserBanque           UserBanque[]
 
   @@map("user")
 }
 
 model Banque {
-  id           Int          @id @default(autoincrement())
-  nom          String
-  adresse      String
-  telephone    String       @unique
-  utilisateurs User[]       @relation("UserBanque") // Many-to-many relation
-  UserBanque   UserBanque[]
+  id                   Int             @id @default(autoincrement())
+  nom                  String
+  adresse              String
+  telephone            String          @unique
+  utilisateurs         User[]          @relation("UserBanque") // Many-to-many relation
 
   @@map("banque")
 }
 
 model UserBanque {
-  userId   Int
-  banqueId Int
-  user     User   @relation(fields: [userId], references: [id])
-  banque   Banque @relation(fields: [banqueId], references: [id])
+  userId               Int
+  banqueId             Int
+  user                 User            @relation(fields: [userId], references: [id])
+  banque               Banque          @relation(fields: [banqueId], references: [id])
 
   @@id([userId, banqueId]) // Composite primary key for the join table
   @@map("user_banque")
 }
+
 
 model Notifications {
   id      Int       @id @default(autoincrement())
@@ -84,6 +83,7 @@ model Transactions {
   @@index([receiverId])
   @@map("transaction")
 }
+
 
 model ContenuMedia {
   id     Int    @id @default(autoincrement())

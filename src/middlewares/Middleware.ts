@@ -24,7 +24,8 @@ class Middleware {
                 nom: decoded.nom,
                 prenom: decoded.prenom,
                 image: decoded.image,
-                type: decoded.type
+                type: decoded.type,
+                telephone: decoded.telephone
             };
             console.log(req.user.id);
 
@@ -119,6 +120,18 @@ class Middleware {
         } catch (error) {
             console.error("Error uploading files:", error);
             res.status(500).json({ message: "Failed to upload files" });
+        }
+    }
+    public  verifySessionToken(req: Request, res: Response, next: NextFunction) {
+        try {
+            const sessionToken = req.header("x-session-token");
+            if (!sessionToken) {
+                return res.status(401).json({ error: 'Le token de session est requis.' });
+            }
+            const decodedSession = jwt.verify(sessionToken, process.env.SECRET_KEY as string) as jwt.JwtPayload;
+            next();
+        } catch (error) {
+            return res.status(401).json({ error: 'Token de session invalide.' });
         }
     }
 }
