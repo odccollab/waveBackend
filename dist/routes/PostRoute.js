@@ -4,7 +4,10 @@
 // import  PostController  from '../controllers/PostController';
 // import upload from "../middlewares/multerConfig";
 // import multer from "multer";
-//
+
+// import { Router } from 'express';
+// import { transferController } from '../controllers/TransfertController';
+// const router = Router();
 // const router:Router =  express.Router();
 //
 // // creer un post les variable requis { contenu, contenuMedia }
@@ -82,4 +85,7 @@
 //   router.post('/signale',Middleware.verifyToken, PostController.signalPost);
 // //  //recherche utilisateur ou post ça prend  {value}
 //  router.post('/find',Middleware.verifyToken, PostController.findUserOrPost);
+
+// Dans votre router
+// router.post('/transfer/receive', transferController.processWithdrawal);
 //  export default router

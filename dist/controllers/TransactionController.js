@@ -12,9 +12,11 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
+
+exports.TransactionController = void 0;
 const prisma_1 = __importDefault(require("../prisma"));
 class TransactionController {
-    static transaction(sender, montant, type, receiverPhone) {
+    transaction(sender, montant, type, receiverPhone) {
         return __awaiter(this, void 0, void 0, function* () {
             // Recherche du receiver par numéro de téléphone dans les utilisateurs
             let receiver = yield prisma_1.default.user.findUnique({
@@ -58,6 +60,7 @@ class TransactionController {
                 case 'retrait':
                     // Le receiver doit être un utilisateur de type "pro" pour les retraits
                     if (receiver && 'solde' in receiver && receiver.type === 'agent') {
+
                         receiver.solde -= montant;
                         sender.solde += montant; // Ajout du montant retiré au solde du sender
                     }
@@ -82,6 +85,8 @@ class TransactionController {
                 default:
                     return 'Transaction type not supported';
             }
+
+            // Mettre à jour le solde du sender
             sender.solde = soldeSenderAfterTransaction;
             // Créer l'objet transaction
             const transaction = yield prisma_1.default.transactions.create({
@@ -114,3 +119,4 @@ class TransactionController {
     }
 }
 exports.default = TransactionController;
+
