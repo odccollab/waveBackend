@@ -2,7 +2,7 @@
 // import UserController from "../controllers/UserController";
 // import Middleware from '../middlewares/Middleware';
 // import upload from "../middlewares/multerConfig";
-
+//
 // const router:Router = express.Router();
 // ///use middleware
 // // //create User ça prend { nom, prenom, role, password, telephone, mail,passconfirm }
@@ -24,7 +24,7 @@
 //  router.get('/followings',Middleware.verifyToken,UserController.getFollowings);
 // // //achat credit  ça prend  {  amount }
 // router.post('/achatCredit', Middleware.verifyToken, UserController.rechargerCompte);
-// // //changer la tailleur  ça prend  rien 
+// // //changer la tailleur  ça prend  rien
 // router.post('/modifyProfile', Middleware.verifyToken, UserController.ChangeEnTailleur)
 // // //ajouter ou enlever favori ça prend { postId }
 // router.post('/favorite',Middleware.verifyToken, UserController.manageFavorites);
@@ -35,7 +35,7 @@
 //     router.post('/vote',Middleware.verifyToken, UserController.manageVotes);
 // // //avoir les messages pour le user connecte
 // router.get('/messages', Middleware.verifyToken, UserController.getMessageUsers);
-// // //envoyer message  ça prend { receiver, content } 
+// // //envoyer message  ça prend { receiver, content }
 // router.post('/messages', Middleware.verifyToken, UserController.sendMessage);
 // // //rechercher message  ça prend { searchText, startDate, endDate, senderId }
 // // router.get('/messages/search', Middleware.verifyToken, UserController.searchMessages);
@@ -46,7 +46,7 @@
 // router.get('/profile/:userId',Middleware.verifyToken, UserController.profile);
 // //avoir mes notifications
 // router.get('/notification',Middleware.verifyToken, UserController.getNotif);
-// //Article 
+// //Article
 // //ajout article {  "libelle": "Example Article", "prixUnitaire": 100.50,  "quantiteStock": 20}
 // router.post('/article',Middleware.verifyToken,Middleware.validateData("article"),Middleware.canPost, UserController.ajoutArticle);
 // //avoir mes articles
@@ -62,16 +62,16 @@
 // router.get('/commande', Middleware.verifyToken, UserController.orderDuVendeur);
 // // Route pour valider une commande
 // router.put('/commande/:orderId', Middleware.verifyToken, Middleware.canValidateOrder, UserController.validateOrder);
-
+//
 // // Route pour lister les commandes d'un client
 // router.get('/commande-c', Middleware.verifyToken, UserController.orderDuClient);
-// //annuler commande 
+// //annuler commande
 // router.delete('/commande/:orderId', Middleware.verifyToken, Middleware.canValidateOrder, UserController.cancelOrder);
-
+//
 // router.get('/suggested-friends/:userId?',Middleware.verifyToken, UserController.getSuggestedFriendsC);
 // router.get('/not-followed-back/:userId?', Middleware.verifyToken,UserController.getNotFollowedBackC);
 // router.get('/mutual-friends/:userId?',Middleware.verifyToken, UserController.getMutualFriendsC);
 // router.get('/suggested-and-not-followed/:userId?',Middleware.verifyToken, UserController.getSuggestedAndNotFollowedBackC);
 // router.get('/search',Middleware.verifyToken, UserController.getFilteredUsers);
-
+//
 // export default router;
