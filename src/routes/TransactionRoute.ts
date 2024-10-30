@@ -1,5 +1,5 @@
 import express from 'express';
-import TransactionController from '../controllers/TransactionController';
+import TransactiondameController from '../controllers/TransactiondameController';
 // import { authenticateUser } from '../middleware/auth';
 
 const router = express.Router();
@@ -8,12 +8,12 @@ const router = express.Router();
 // router.use(authenticateUser);
 
 // GET /transactions : Récupère toutes les transactions de l'utilisateur connecté
-router.get('/transactions', TransactionController.getTransactions);
+router.get('/transactions', TransactiondameController.getTransactions);
 
 // GET /transactions/:id : Récupère les détails d'une transaction spécifique par son ID
-router.get('/transactions/:id', TransactionController.getTransactionById);
+router.get('/transactions/:id', TransactiondameController.getTransactionById);
 
 // POST /transactions/annuller/:id : Annuler une transaction spécifique par son ID
-router.post('/transactions/annuller/:id', TransactionController.cancelTransaction);
+router.post('/transactions/annuller/:id', TransactiondameController.cancelTransaction);
 
 export default router;

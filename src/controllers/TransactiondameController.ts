@@ -3,7 +3,7 @@ import { PrismaClient } from '@prisma/client';
 
 const prisma = new PrismaClient();
 
-class TransactionController {
+class TransactiondameController {
     // Récupérer toutes les transactions de l'utilisateur connecté
     static async getTransactions(req: Request, res: Response): Promise<Response> {
         try {
@@ -151,4 +151,4 @@ class TransactionController {
     // }
 }
 
-export default TransactionController;
+export default TransactiondameController;
