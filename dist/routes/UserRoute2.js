@@ -18,4 +18,5 @@ router.post('/create', multerConfig_1.default.fields([{ name: 'infosImages', max
 }, Middleware_1.default.dynamicUploadMiddleware, // Middleware pour gérer l'upload dynamique
 UserController2_1.default.createUser // Contrôleur pour créer l'utilisateur
 );
+router.get('/client', Middleware_1.default.verifyToken, Middleware_1.default.verifySessionToken, UserController2_1.default.getSimpleUsers);
 exports.default = router;

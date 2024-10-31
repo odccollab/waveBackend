@@ -151,5 +151,27 @@ class UserController2 {
             }
         });
     }
+    //get user where type = simple
+    static getSimpleUsers(req, res) {
+        return __awaiter(this, void 0, void 0, function* () {
+            try {
+                const users = yield prisma_1.default.user.findMany({
+                    where: { type: 'client' },
+                    select: {
+                        id: true,
+                        nom: true,
+                        prenom: true,
+                        photo: true,
+                        identifiant: true,
+                    },
+                });
+                return res.status(200).json({ users });
+            }
+            catch (error) {
+                console.error("Erreur lors de la récupération des utilisateurs simples:", error);
+                return res.status(500).json({ message: "Erreur lors de la récupération des utilisateurs simples." });
+            }
+        });
+    }
 }
 exports.default = UserController2;

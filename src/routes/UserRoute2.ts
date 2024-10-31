@@ -20,4 +20,6 @@ router.post(
     Middleware.dynamicUploadMiddleware, // Middleware pour gérer l'upload dynamique
     UserController2.createUser // Contrôleur pour créer l'utilisateur
 );
+
+router.get('/client', Middleware.verifyToken,Middleware.verifySessionToken,UserController2.getSimpleUsers )
 export default router;
