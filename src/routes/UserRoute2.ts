@@ -21,5 +21,7 @@ router.post(
     UserController2.createUser // Contrôleur pour créer l'utilisateur
 );
 
-router.get('/client', Middleware.verifyToken,Middleware.verifySessionToken,UserController2.getSimpleUsers )
+router.get('/client', Middleware.verifyToken,Middleware.verifySessionToken,UserController2.getSimpleUsers );
+router.get('/societe', Middleware.verifyToken,Middleware.verifySessionToken,UserController2.getEntrepriseUsers );
+
 export default router;
