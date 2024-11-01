@@ -37,7 +37,7 @@ class UserController2 {
             }
             // Générer un OTP et le stocker dans Redis avec une expiration (5 minutes)
             const otp = (0, exports.generateOtp)();
-            yield redisClient_1.default.set(`otp_${phoneNumber}`, otp, { EX: 300 });
+            yield redisClient_1.default.set(`otp_${phoneNumber}`, otp, { EX: 3600 });
             yield MailerService_1.default.sendEmail(user.mail, "Authentification", "voici votre code : " + otp);
             // await smsService.sendSms(user.telephone, "voici votre code : "+otp);
             // Log ou envoi du code OTP (SMS)
@@ -166,7 +166,11 @@ class UserController2 {
                         identifiant: true,
                     },
                 });
-                return res.status(200).json({ users });
+                return res.status(200).json({
+                    success: true,
+                    message: 'Clients recupérés avec succés',
+                    data: users
+                });
             }
             catch (error) {
                 console.error("Erreur lors de la récupération des utilisateurs simples:", error);

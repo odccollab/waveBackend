@@ -1,5 +1,6 @@
 import { Router } from 'express';
 import { contactController } from '../controllers/ContactController';
+import upload from "../middlewares/multerConfig";
 // import { authenticateUser } from '../middlewares/auth'; // Middleware d'authentification
 
 const router = Router();

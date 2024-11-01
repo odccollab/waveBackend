@@ -128,7 +128,7 @@ class RechargeController {
   // Récupérer toutes les transactions de l'utilisateur connecté
   async getTransactions(req: Request, res: Response): Promise<Response> {
     try {
-      const userId = 1; // Remplacez par `req.userId` dans un contexte authentifié
+      const userId = parseInt(req.user!.id); // Remplacez par `req.userId` dans un contexte authentifié
 
       const transactions = await prisma.transactions.findMany({
         where: {
@@ -147,6 +147,7 @@ class RechargeController {
       console.error('Erreur lors de la récupération des transactions:', error);
       return res.status(500).json({
         success: false,
+        data:null,
         message: "Erreur lors de la récupération des transactions"
       });
     }

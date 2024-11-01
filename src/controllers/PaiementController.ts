@@ -15,7 +15,7 @@ class PaiementController {
     async payerService(req: Request, res: Response): Promise<void> {
         // Vérifiez que l'ID utilisateur est défini et convertissez-le en nombre
         const userId = req.user && parseInt(req.user.id, 10);
-        console.log(userId);
+        console.log(req.user);
         
         if (!userId || isNaN(userId)) {
             res.status(400).json({ error: 'ID utilisateur non valide' });

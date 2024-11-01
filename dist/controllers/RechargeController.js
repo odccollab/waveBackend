@@ -114,7 +114,7 @@ class RechargeController {
     getTransactions(req, res) {
         return __awaiter(this, void 0, void 0, function* () {
             try {
-                const userId = 1; // Remplacez par `req.userId` dans un contexte authentifié
+                const userId = parseInt(req.user.id); // Remplacez par `req.userId` dans un contexte authentifié
                 const transactions = yield prisma_1.default.transactions.findMany({
                     where: {
                         OR: [
@@ -132,6 +132,7 @@ class RechargeController {
                 console.error('Erreur lors de la récupération des transactions:', error);
                 return res.status(500).json({
                     success: false,
+                    data: null,
                     message: "Erreur lors de la récupération des transactions"
                 });
             }
