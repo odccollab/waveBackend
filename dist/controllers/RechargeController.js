@@ -18,33 +18,39 @@ class RechargeController {
     constructor() {
         this.transactionController = new TransactionController_1.default();
     }
+    // Recharger le compte Wave depuis le compte bancaire
     chargFromBank(req, res) {
         return __awaiter(this, void 0, void 0, function* () {
+            var _a;
             try {
-                const { userBankId, amount } = req.body; // Changer bankAccountId en userBankId
-                const userId = parseInt(req.user.id, 10); // Conversion explicite en number
+                const { userBankId, amount } = req.body;
+                const userId = ((_a = req.user) === null || _a === void 0 ? void 0 : _a.id) ? parseInt(req.user.id, 10) : null;
+                if (!userId) {
+                    return res.status(400).json({ error: 'Utilisateur non authentifié.' });
+                }
                 if (!userBankId || !amount || amount <= 0) {
                     return res.status(400).json({
-                        error: 'ID du compte bancaire et montant requis, montant doit être positif',
+                        error: 'ID du compte bancaire et montant requis, le montant doit être positif.',
                     });
                 }
                 const user = yield prisma_1.default.user.findUnique({ where: { id: userId } });
+                if (!user) {
+                    return res.status(404).json({ error: 'Utilisateur introuvable.' });
+                }
                 const userBank = yield prisma_1.default.userBank.findUnique({
-                    where: { userId_bankId: { userId, bankId: userBankId } }, // Utilisation de la clé primaire composite
+                    where: { userId_bankId: { userId, bankId: userBankId } },
                 });
-                if (!user || !userBank) {
-                    return res.status(404).json({ error: 'Utilisateur ou compte bancaire introuvable' });
+                if (!userBank) {
+                    return res.status(404).json({ error: 'Compte bancaire introuvable pour cet utilisateur.' });
                 }
                 if (userBank.solde < amount) {
-                    return res.status(400).json({ error: 'Solde insuffisant sur le compte bancaire' });
+                    return res.status(400).json({ error: 'Solde insuffisant sur le compte bancaire.' });
                 }
-                // Vérification si la recharge dépasse le plafond de l'utilisateur
                 if (user.solde + amount > user.plafond) {
                     return res.status(400).json({
                         error: `Le montant dépasse le plafond autorisé de ${user.plafond}`,
                     });
                 }
-                // Effectuer la transaction en décrémentant le solde du compte bancaire
                 const transactionResult = yield prisma_1.default.$transaction((prisma) => __awaiter(this, void 0, void 0, function* () {
                     yield prisma.userBank.update({
                         where: { userId_bankId: { userId, bankId: userBankId } },
@@ -72,33 +78,36 @@ class RechargeController {
     // Recharger le compte bancaire depuis le compte Wave
     chargFromWave(req, res) {
         return __awaiter(this, void 0, void 0, function* () {
+            var _a;
             try {
-                const { userBankId, amount } = req.body; // Changer bankAccountId en userBankId
-                const userId = parseInt(req.user.id, 10);
-                // Remplacez par `req.userId` dans un contexte authentifié
+                const { userBankId, amount } = req.body;
+                const userId = ((_a = req.user) === null || _a === void 0 ? void 0 : _a.id) ? parseInt(req.user.id, 10) : null;
+                if (!userId) {
+                    return res.status(400).json({ error: 'Utilisateur non authentifié.' });
+                }
                 if (!userBankId || !amount || amount <= 0) {
                     return res.status(400).json({
                         error: 'ID du compte bancaire et montant requis, montant doit être positif',
                     });
                 }
                 const user = yield prisma_1.default.user.findUnique({ where: { id: userId } });
+                if (!user) {
+                    return res.status(404).json({ error: 'Utilisateur introuvable.' });
+                }
                 const userBank = yield prisma_1.default.userBank.findUnique({
                     where: { userId_bankId: { userId, bankId: userBankId } },
                 });
-                if (!user || !userBank) {
-                    return res.status(404).json({ error: 'Utilisateur ou compte bancaire introuvable' });
+                if (!userBank) {
+                    return res.status(404).json({ error: 'Compte bancaire introuvable pour cet utilisateur.' });
                 }
                 if (user.solde < amount) {
                     return res.status(400).json({ error: 'Solde insuffisant sur le compte Wave' });
                 }
-                // Mise à jour du solde du compte bancaire
                 yield prisma_1.default.userBank.update({
                     where: { userId_bankId: { userId, bankId: userBankId } },
                     data: { solde: { increment: amount } },
                 });
-                // Appel de la méthode transaction du TransactionController
-                const transactionResult = yield TransactionController_1.default.transaction(user, amount, 'from_wave', user.telephone // Assurez-vous que c'est le numéro correct pour le receiver
-                );
+                const transactionResult = yield TransactionController_1.default.transaction(user, amount, 'from_wave', user.telephone);
                 if (typeof transactionResult === 'string') {
                     return res.status(400).json({ error: transactionResult });
                 }
@@ -113,8 +122,9 @@ class RechargeController {
     // Récupérer toutes les transactions de l'utilisateur connecté
     getTransactions(req, res) {
         return __awaiter(this, void 0, void 0, function* () {
+            const userId = parseInt(req.user.id); // Remplacez par `req.userId` dans un contexte authentifié
+            console.log(userId);
             try {
-                const userId = parseInt(req.user.id); // Remplacez par `req.userId` dans un contexte authentifié
                 const transactions = yield prisma_1.default.transactions.findMany({
                     where: {
                         OR: [

@@ -32,6 +32,7 @@ class Middleware {
                 nom: decoded.nom,
                 prenom: decoded.prenom,
                 image: decoded.image,
+                solde: decoded.solde,
                 type: decoded.type,
                 telephone: decoded.telephone
             };

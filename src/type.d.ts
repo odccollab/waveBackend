@@ -16,6 +16,7 @@ declare module 'express-serve-static-core' {
             nom: string;
             prenom: string;
             image: string;
+            solde:number;
             type: string;
             telephone: string;
 
@@ -26,6 +27,7 @@ declare module 'express-serve-static-core' {
             nom: string;
             prenom: string;
             image: string;
+            solde: number;
             type: string;
             telephone: string;
         }
